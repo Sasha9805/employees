@@ -14,9 +14,9 @@ class App extends Component {
         super(props);
         this.state = {
             data: [
-                {name: 'John C.', salary: 800, increase: true, id: 1},
-                {name: 'Alex M.', salary: 3000, increase: false, id: 2},
-                {name: 'Carl W.', salary: 5000, increase: true, id: 3},
+                {name: 'John C.', salary: 800, increase: false, rise: false, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: false, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3},
             ]
         };
         this.maxId = 4;
@@ -45,6 +45,7 @@ class App extends Component {
             name,
             salary,
             increase: false,
+            rise: false,
             id: this.maxId++
         };
         this.setState(({ data }) => {
@@ -57,12 +58,53 @@ class App extends Component {
         });
     };
 
+    onToggleProp = (id, prop) => {
+        // 1-ый способ
+        // this.setState(({ data }) => {
+        //     const index = data.findIndex(elem => elem.id === id);
+        //     const old = data[index];
+        //     const newItem = {
+        //         ...old,
+        //         [prop]: !old[prop],
+        //     };
+        //     const newArr = [
+        //         ...data.slice(0, index),
+        //         newItem,
+        //         ...data.slice(index + 1)
+        //     ];
+
+        //     return {
+        //         data: newArr,
+        //     };
+        // });
+
+        // 2-ой способ
+        this.setState(({ data }) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {
+                        ...item,
+                        [prop]: !item[prop],
+                    };
+                }
+                return item;
+            })
+        }));
+    };
+
     render() {
         const { data } = this.state;
+        const employees = data.length;
+        // Мое решение
+        const increased = data.reduce((prev, curr) => prev + curr.increase, 0);
+        // С урока
+        // const increased = data.filter(item => item.increase).length;
 
         return (
             <div className="app">
-                <AppInfo />
+                <AppInfo 
+                    employees={employees}
+                    increased={increased} />
 
                 <div className="search-panel">
                     <SearchPanel />
@@ -71,7 +113,8 @@ class App extends Component {
 
                 <EmployeesList
                     data={data}
-                    onDelete={this.deleteItem} />
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp} />
                 <EmployeesAddForm onAdd={this.addItem} />
             </div>
         );
