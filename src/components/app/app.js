@@ -10,19 +10,17 @@ import './app.css';
 
 class App extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [
+    state = {
+        data: [
                 {name: 'John C.', salary: 800, increase: false, rise: false, id: 1},
                 {name: 'Alex M.', salary: 3000, increase: false, rise: false, id: 2},
                 {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3},
             ],
             term: '',
             filter: 'all',
-        };
-        this.maxId = 4;
-    }
+    };
+
+    maxId = 4;
 
     deleteItem = (id) => {
         this.setState(({ data }) => {
